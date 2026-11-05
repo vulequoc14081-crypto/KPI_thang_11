@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KPI Chi nhánh tháng 11/2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Bố cục: sân khấu 1920×1080 co giãn theo màn hình, 4 slide; cùng hệ màu, font, thẻ KPI và tab nhà máy như Dashboard SXKD T10 */
+:root{--green:#009D48;--green-d:#00753A;--green-m:#5BBF86;--green-l:#E6F5EC;--navy:#364185;--navy-d:#242C63;--navy-m:#8A91C3;--navy-l:#ECEEF7;--ink:#1F2547;--muted:#62688A;--line:#DEE1EC;--bg:#F4F5F9;--card:#FFFFFF;--zebra:#F3FAF6;--soft:#EEF0F6;--amber:#F59E0B;--amber-d:#A86200;--amber-l:#FEF2D9;--grey:#C5C9D8;--host:#D9DDEA;--f:'Barlow','Segoe UI',Arial,sans-serif;color-scheme:light}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:var(--host);font-family:var(--f);color:var(--ink)}
+.stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform-origin:50% 50%;background:var(--bg);box-shadow:0 10px 40px rgba(36,44,99,.25);overflow:hidden}
+.slide{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .35s ease,visibility .35s}
+.slide.on{opacity:1;visibility:visible}
+
+/* Header */
+.hd{position:absolute;left:0;right:0;top:0;height:112px;background:var(--card);display:flex;align-items:center;padding:0 40px;gap:28px}
+.hd::after{content:'';position:absolute;left:0;right:0;bottom:-4px;height:4px;background:linear-gradient(90deg,var(--green) 0 62%,var(--navy) 62% 100%)}
+.logo{height:66px;display:flex;align-items:center}
+.logo img{height:66px;width:auto;display:block}
+.lt{display:flex;flex-direction:column;line-height:1.05}
+.lt b{font-size:34px;font-weight:700;color:var(--navy);letter-spacing:.5px}
+.lt span{font-size:14px;color:var(--green-d);font-weight:600}
+.sep{width:1px;height:58px;background:var(--line)}
+.ttl h1{font-size:38px;font-weight:700;color:var(--navy);line-height:1.1}
+.ttl p{font-size:19px;color:var(--muted);margin-top:4px}
+.tabs{margin-left:auto;display:flex;background:var(--navy-l);border-radius:999px;padding:5px}
+.tabs button{font:600 18px var(--f);color:var(--navy);background:none;border:0;padding:10px 22px;border-radius:999px;cursor:pointer;transition:background .2s,color .2s;white-space:nowrap}
+.tabs button.on{background:var(--navy);color:#fff}
+.tabs button small{font-size:15px;font-weight:700;margin-left:6px;opacity:.75}
+.tabs button:focus-visible,.nav button:focus-visible,.cchips button:focus-visible{outline:3px solid var(--green);outline-offset:2px}
+
+/* Body & footer */
+.bd{position:absolute;top:116px;bottom:58px;left:0;right:0;padding:22px 40px 14px;display:grid;gap:22px}
+#s1 .bd{grid-template-rows:252px 1fr 132px}
+#s2 .bd{grid-template-rows:318px 1fr}
+#s3 .bd{grid-template-rows:88px 1fr}
+#s4 .bd{grid-template-rows:1fr 236px}
+.ft{position:absolute;left:0;right:0;bottom:0;height:58px;background:var(--card);border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 40px;font-size:16px;color:var(--muted)}
+.ft b{color:var(--navy);font-weight:600}
+.nav{position:absolute;bottom:0;left:50%;transform:translateX(-50%);height:58px;display:flex;align-items:center;gap:16px;z-index:5}
+.nav button{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--navy);font:700 22px var(--f);cursor:pointer;line-height:1}
+.nav button:hover{background:var(--navy);color:#fff}
+.dots{display:flex;gap:10px}
+.dots i{width:11px;height:11px;border-radius:50%;background:var(--grey);cursor:pointer;transition:all .25s}
+.dots i.on{background:var(--green);width:30px;border-radius:6px}
+
+/* KPI cards */
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:18px}
+.kpi{position:relative;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px 14px 22px;display:flex;flex-direction:column;overflow:hidden}
+.kpi::before{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--navy)}
+.kpi.neg::before{background:var(--amber)}
+.kpi.pos{border-color:#BFE6CF}
+.kpi.pos::before{background:var(--green)}
+.k-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:19px;font-weight:600}
+.k-top small{font-size:15px;color:var(--muted);font-weight:500;white-space:nowrap}
+.k-val{font-size:48px;font-weight:700;color:var(--navy);line-height:1.1;margin-top:4px;font-variant-numeric:tabular-nums;letter-spacing:-.5px}
+.neg .k-val{color:var(--amber-d)}
+.pos .k-val{color:var(--green-d)}
+.badge{align-self:flex-start;margin-top:8px;font-size:16px;font-weight:600;padding:4px 12px;border-radius:999px;background:var(--navy-l);color:var(--navy);white-space:nowrap}
+.neg .badge{background:var(--amber-l);color:var(--amber-d)}
+.pos .badge{background:var(--green);color:#fff}
+.k-bot{margin-top:auto;display:flex;align-items:flex-end;justify-content:space-between;gap:8px}
+.meta{font-size:15px;color:var(--muted);display:grid;grid-template-columns:auto auto;column-gap:10px;row-gap:1px;line-height:1.35}
+.meta b{color:var(--ink);font-weight:600;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.ring{width:78px;height:78px;flex:none}
+
+/* Panels */
+.row{display:grid;gap:22px;min-height:0}
+.pn{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 20px 12px;display:flex;flex-direction:column;min-height:0;min-width:0}
+.pn-h{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:6px}
+.pn-h h3{font-size:20px;font-weight:600;color:var(--navy);white-space:nowrap}
+.pn-h h3 small{font-size:15px;color:var(--muted);font-weight:500;margin-left:6px}
+.lg{display:flex;gap:14px;font-size:14.5px;color:var(--muted);flex-wrap:wrap;justify-content:flex-end}
+.lg i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.cv{flex:1;min-height:0;position:relative}
+svg text{font-family:var(--f);font-variant-numeric:tabular-nums}
+.vl{font-size:15px;font-weight:600;fill:var(--ink)}
+.gl{font-size:17px;font-weight:600;fill:var(--navy)}
+.gs{font-size:14px;font-weight:500;fill:var(--muted)}
+.axis{stroke:#B9BED3;stroke-width:1.2}
+
+/* Chips */
+.chip{font-size:15px;font-weight:600;padding:3px 11px;border-radius:999px;background:var(--navy-l);color:var(--navy);white-space:nowrap;display:inline-block}
+.chip.good,.chip.tx{background:var(--green-l);color:var(--green-d)}
+.chip.warn,.chip.t11{background:var(--amber-l);color:var(--amber-d)}
+.chip.na{background:var(--soft);color:var(--muted)}
+.chip.moc{background:var(--navy-l);color:var(--navy)}
+.chip.ct{background:var(--navy);color:#fff}
+
+/* Slide 1: dải quy đổi */
+.ops{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.op{background:var(--card);border:1px solid var(--line);border-radius:12px;display:grid;grid-template-columns:200px repeat(4,1fr);align-items:stretch;padding:14px 0}
+.op>div{padding:0 18px;display:flex;flex-direction:column;justify-content:center;gap:3px;min-width:0}
+.op>div+div{border-left:1px solid var(--line)}
+.op .nm b{font-size:20px;color:var(--navy)}
+.op .nm span{font-size:15px;color:var(--muted)}
+.op label{font-size:15px;color:var(--muted);white-space:nowrap}
+.op strong{font-size:28px;font-weight:700;color:var(--ink);line-height:1.1;font-variant-numeric:tabular-nums;white-space:nowrap}
+.op strong small{font-size:15px;font-weight:500;color:var(--muted);margin-left:4px}
+.op .chip{align-self:flex-start;font-size:13.5px;padding:2px 9px}
+
+/* Slide 2 */
+.shn{display:grid;grid-template-columns:1fr 400px;gap:28px;flex:1;min-height:0}
+.shs{display:grid;grid-template-rows:1fr 1fr;padding:14px 0 34px 28px;border-left:1px solid var(--line)}
+.sst{display:flex;align-items:center;gap:18px}
+.sst strong{font-size:46px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1;white-space:nowrap}
+.sst strong small{font-size:16px;font-weight:500;color:var(--muted);margin-left:5px}
+.sst div{display:flex;flex-direction:column;gap:6px}
+.sst span{font-size:15px;color:var(--muted)}
+.dm{display:flex;flex-direction:column;flex:1;justify-content:space-between;min-height:0}
+.dmr{display:grid;grid-template-columns:340px 1fr 1fr;column-gap:40px;align-items:center;padding:10px 0;border-bottom:1px solid var(--soft)}
+.dmr:last-child{border-bottom:0}
+.dmr.hd2{padding:0 0 6px}
+.dmr.hd2 b{font-size:18px;font-weight:700;padding-bottom:6px;border-bottom:3px solid}
+.ml b{display:block;font-size:19px;color:var(--navy);font-weight:600}
+.ml span{font-size:15px;color:var(--muted)}
+.dmc{display:flex;flex-direction:column;gap:6px;justify-content:center}
+.dmb{display:grid;grid-template-columns:44px 1fr;align-items:center;gap:8px;height:30px}
+.dmb label{font-size:15px;color:var(--muted);font-weight:600}
+.trk{display:flex;align-items:center;gap:10px;height:26px}
+.trk i{display:block;height:22px;border-radius:3px}
+.trk em{font-style:normal;font-size:21px;font-weight:700;color:var(--ink);white-space:nowrap;font-variant-numeric:tabular-nums}
+
+/* Slide 3 */
+.sum{display:grid;grid-template-columns:250px 600px 1fr;gap:22px}
+.sb{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 20px;display:flex;flex-direction:column;justify-content:center;gap:7px;min-width:0}
+.sb h4{font-size:15px;font-weight:600;color:var(--muted)}
+.sb .big{display:flex;align-items:baseline;gap:10px}
+.sb .big strong{font-size:50px;font-weight:700;color:var(--navy);line-height:1;font-variant-numeric:tabular-nums}
+.sb .big span{font-size:17px;color:var(--muted);font-weight:500}
+.hbar{display:flex;height:24px;border-radius:5px;overflow:hidden}
+.hbar div{display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700}
+.hlg{display:flex;gap:18px;font-size:14.5px;color:var(--muted)}
+.hlg i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.hlg b{color:var(--ink)}
+.cchips{display:flex;flex-wrap:wrap;gap:8px}
+.cchips button{font:600 15px var(--f);border:1px solid var(--line);background:var(--card);color:var(--navy);padding:5px 13px;border-radius:999px;cursor:pointer;transition:background .2s,color .2s}
+.cchips button b{margin-left:7px;color:var(--green-d);font-variant-numeric:tabular-nums}
+.cchips button:hover{border-color:var(--navy-m)}
+.cchips button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.cchips button.on b{color:#fff}
+.tk{width:100%;border-collapse:collapse;table-layout:fixed;font-size:15px}
+.tk th{background:var(--green);color:#fff;font-weight:600;padding:7px 10px;text-align:left;font-size:15px}
+.tk td{padding:4px 10px;border-bottom:1px solid var(--line);line-height:1.3;vertical-align:middle}
+.tk tr:nth-child(even) td{background:var(--zebra)}
+.tk td.id{font-weight:700;color:var(--navy);font-variant-numeric:tabular-nums}
+.tk td.ctd{font-weight:600;color:var(--navy)}
+.tk td.sp,.tk td.ph,.tk td.kl{color:var(--muted);font-size:14.5px}
+.tk td .chip{font-size:13.5px;padding:1px 8px;line-height:1.3}
+.tk tbody tr{transition:opacity .25s}
+.tk tbody tr.dim{opacity:.16}
+
+/* Slide 4 */
+.pl{display:grid;grid-template-columns:1fr 1fr;gap:22px;min-height:0}
+.pt{display:grid;grid-template-columns:62px 1fr 250px;gap:14px;align-items:start;padding:10px 0;border-bottom:1px solid var(--soft)}
+.pt .no{font:700 16px var(--f);color:#fff;border-radius:6px;text-align:center;padding:5px 0;font-variant-numeric:tabular-nums}
+.pt h4{font-size:17px;font-weight:600;line-height:1.3;color:var(--ink)}
+.pt p{font-size:15px;color:var(--muted);margin-top:3px;line-height:1.3}
+.pt .rt{display:flex;flex-wrap:wrap;gap:5px 6px;align-items:center}
+.pt .rt .chip{font-size:13.5px;padding:2px 9px}
+.pt .rt .nt{font-size:14px;color:var(--muted);flex-basis:100%;line-height:1.3}
+.rel{margin-top:12px}
+.rel h5{font-size:15px;font-weight:600;color:var(--muted);margin-bottom:6px}
+.rel ul{list-style:none;display:grid;grid-template-columns:1fr;gap:5px}
+.rel li{display:grid;grid-template-columns:62px 1fr auto;gap:8px;align-items:center;font-size:14.5px;line-height:1.25}
+.rel li b{color:var(--navy);font-variant-numeric:tabular-nums}
+.rel li .chip{font-size:12.5px;padding:1px 8px}
+.tlw{display:grid;grid-template-columns:1fr 1fr 1fr;gap:22px;flex:1;margin-top:4px}
+.tlc h5{display:flex;justify-content:space-between;align-items:center;font-size:16px;font-weight:700;margin-bottom:10px;padding-bottom:6px;border-bottom:3px solid}
+.tlc h5 small{font-size:14px;font-weight:600;color:var(--muted)}
+.ms{display:grid;grid-template-columns:30px 1fr;gap:10px;margin-bottom:10px}
+.ms i{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font:700 15px var(--f);font-style:normal;color:#fff}
+.ms b{font-size:16px;font-weight:600;display:block;line-height:1.25;color:var(--ink)}
+.ms span{font-size:14.5px;color:var(--muted);line-height:1.3;display:block;margin-top:2px}
+
+/* Làm mờ theo tab nhà máy */
+.slide [data-u]{transition:opacity .3s}
+.slide[data-focus=sh1] .bd [data-u=tb2],.slide[data-focus=tb2] .bd [data-u=sh1]{opacity:.2}
+
+/* Motion */
+.bar{transform-box:fill-box;transform-origin:50% 100%;animation:gy .8s cubic-bezier(.2,.8,.2,1) both}
+.bar.neg{transform-origin:50% 0}
+.hb{transform-origin:0 50%;animation:gx .9s cubic-bezier(.2,.8,.2,1) both}
+.svhb{transform-box:fill-box;transform-origin:0 50%;animation:gx .9s cubic-bezier(.2,.8,.2,1) .3s both}
+.fade{animation:fd .6s ease both}
+.arc{animation:ring 1s cubic-bezier(.3,.7,.2,1) .2s both}
+.dn{animation:dn 1s cubic-bezier(.3,.7,.2,1) both}
+@keyframes gy{from{transform:scaleY(0)}}
+@keyframes gx{from{transform:scaleX(0)}}
+@keyframes fd{from{opacity:0}}
+@keyframes ring{from{stroke-dashoffset:var(--c)}}
+@keyframes dn{from{stroke-dasharray:0 var(--c)}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+.noanim *,.noanim *::before,.noanim *::after{animation:none!important;transition:none!important}
+
+@media print{
+ @page{size:A4 landscape;margin:0}
+ html,body{height:auto;overflow:visible;background:#fff}
+ .stage{position:static;transform:none!important;width:1920px;height:auto;box-shadow:none;background:none}
+ .slide{position:relative;width:1920px;height:1080px;opacity:1!important;visibility:visible!important;background:var(--bg);zoom:.584;break-after:page;page-break-after:always}
+ .nav{display:none}
+ *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+
+<!-- SLIDE 1 -->
+<section class="slide" id="s1" data-focus="cn">
+ <header class="hd">
+  <div class="logo"></div><div class="sep"></div>
+  <div class="ttl"><h1>KPI tháng 11/2026 – chỉ tiêu SXKD</h1><p>Mục tiêu Chi nhánh giao, đối chiếu KHCS tháng 11 và thực hiện tháng 10</p></div>
+  <div class="tabs" role="tablist"><button class="on" data-u="cn">Toàn Chi nhánh</button><button data-u="sh1">NMĐ Sông Hậu 1</button><button data-u="tb2">NMĐ Thái Bình 2</button></div>
+ </header>
+ <div class="bd">
+  <div class="kpis" id="s1k"></div>
+  <div class="row" style="grid-template-columns:1fr 1fr 1fr">
+   <div class="pn"><div class="pn-h"><h3>Sản lượng điện<small>tr.kWh</small></h3><div class="lg" id="lg1"></div></div><div class="cv" id="s1a"></div></div>
+   <div class="pn"><div class="pn-h"><h3>Doanh thu<small>tỷ đồng</small></h3><div class="lg" id="lg2"></div></div><div class="cv" id="s1b"></div></div>
+   <div class="pn"><div class="pn-h"><h3>Lợi nhuận sau thuế<small>tỷ đồng</small></h3><div class="lg" id="lg3"></div></div><div class="cv" id="s1c"></div></div>
+  </div>
+  <div class="ops" id="s1d"></div>
+ </div>
+ <footer class="ft"><span>Nguồn: <b>KPI tháng 11/2026 (Mẫu số 01)</b> · TH T10, KHCS: <b>CV 2239/CNPĐ-KTKH</b></span><span>1 / 4</span></footer>
+</section>
+
+<!-- SLIDE 2 -->
+<section class="slide" id="s2" data-focus="cn">
+ <header class="hd">
+  <div class="logo"></div><div class="sep"></div>
+  <div class="ttl"><h1>KPI tháng 11/2026 – kỹ thuật, vận hành</h1><p>Suất hao nhiệt và định mức kinh tế kỹ thuật theo nhà máy</p></div>
+  <div class="tabs" role="tablist"><button class="on" data-u="cn">Toàn Chi nhánh</button><button data-u="sh1">NMĐ Sông Hậu 1</button><button data-u="tb2">NMĐ Thái Bình 2</button></div>
+ </header>
+ <div class="bd">
+  <div class="pn"><div class="pn-h"><h3>Suất hao nhiệt tại cân than máy cấp<small>kJ/kWh, cả nhà máy</small></h3><div class="lg"><span><i style="background:#364185;width:5px;height:16px;vertical-align:-3px"></i>KPI SH1</span><span><i style="background:#009D48;width:5px;height:16px;vertical-align:-3px"></i>KPI TB2</span><span><i style="background:#fff;border:3px solid #242C63;border-radius:50%"></i>TH tháng 10</span><span><i style="background:#F59E0B"></i>Cần giảm</span><span><i style="background:#5BBF86"></i>Dư địa</span></div></div>
+   <div class="shn"><div class="cv" id="s2a"></div><div class="shs" id="s2s"></div></div></div>
+  <div class="pn"><div class="pn-h"><h3>Định mức kinh tế kỹ thuật còn lại</h3></div><div class="dm" id="s2b"></div></div>
+ </div>
+ <footer class="ft"><span>Nguồn: <b>KPI tháng 11/2026 (Mẫu số 01)</b> · TH T10: <b>CV 2239/CNPĐ-KTKH</b></span><span>2 / 4</span></footer>
+</section>
+
+<!-- SLIDE 3 -->
+<section class="slide" id="s3">
+ <header class="hd">
+  <div class="logo"></div><div class="sep"></div>
+  <div class="ttl"><h1>Nhiệm vụ trọng tâm chung</h1><p>Mục 3.1 – theo đơn vị chủ trì, thời hạn và căn cứ giao</p></div>
+  <div class="tabs" role="tablist" id="s3tabs"></div>
+ </header>
+ <div class="bd">
+  <div class="sum" id="s3s"></div>
+  <div class="pn" style="padding:12px 20px"><table class="tk" id="s3t"></table></div>
+ </div>
+ <footer class="ft"><span>Nguồn: <b>KPI Chi nhánh tháng 11/2026 (Mẫu số 01), duyệt 30/10/2026</b></span><span>3 / 4</span></footer>
+</section>
+
+<!-- SLIDE 4 -->
+<section class="slide" id="s4" data-focus="cn">
+ <header class="hd">
+  <div class="logo"></div><div class="sep"></div>
+  <div class="ttl"><h1>Nhiệm vụ trọng tâm của 02 nhà máy</h1><p>Mục 3.3 NMĐ Sông Hậu 1 và mục 3.2 NMĐ Thái Bình 2</p></div>
+  <div class="tabs" role="tablist"><button class="on" data-u="cn">Cả 02 NMĐ</button><button data-u="sh1">NMĐ Sông Hậu 1</button><button data-u="tb2">NMĐ Thái Bình 2</button></div>
+ </header>
+ <div class="bd">
+  <div class="pl" id="s4a"></div>
+  <div class="pn" data-u="tb2"><div class="pn-h"><h3>Mốc tiến độ thủ tục đất đai NMĐ Thái Bình 2<small>nhiệm vụ 3.2.2</small></h3></div><div class="tlw" id="s4b"></div></div>
+ </div>
+ <footer class="ft"><span>Nguồn: <b>KPI Chi nhánh tháng 11/2026 (Mẫu số 01), duyệt 30/10/2026</b></span><span>4 / 4</span></footer>
+</section>
+
+<div class="nav"><button id="prev" aria-label="Slide trước">‹</button><div class="dots" id="dots"></div><button id="next" aria-label="Slide sau">›</button></div>
+</div>
+
+<script>
+/* Logo PVPGB gốc: dán chuỗi data:image/png;base64,... vào LOGO_SRC (giữ nguyên file, không chỉnh sửa) */
+const LOGO_SRC = '';
+
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const C={g:'#009D48',gd:'#00753A',gm:'#5BBF86',n:'#364185',nd:'#242C63',nm:'#8A91C3',a:'#F59E0B',ad:'#A86200',al:'#FEF2D9',gr:'#C5C9D8',so:'#EEF0F6',mu:'#62688A'};
+function fmt(n,d=1){const s=Math.abs(n).toLocaleString('vi-VN',{minimumFractionDigits:d,maximumFractionDigits:d});return (n<0&&Math.abs(n)>=Math.pow(10,-d)/2?'−':'')+s}
+const sg=(n,d=1)=>(n>0?'+':'')+fmt(n,d);
+const pct=(a,b,d=1)=>sg((a/b-1)*100,d)+'%';
+const arrow=(a,b)=>a<b?'▼':'▲';
+
+/* ===== DỮ LIỆU KPI THÁNG 11/2026 (Mẫu số 01) ===== */
+const K={
+ sl:{cn:1007.09,sh1:575.74,tb2:431.35},
+ dt:{cn:2238.76,sh1:1280.11,tb2:958.65},
+ ln:{cn:-11.16,sh1:-70.78,tb2:59.62},
+ shn:{sh1:9576.56,tb2:10450},
+ td:{sh1:5.57,tb2:6.62},
+ cs:{sh1:[565,565],tb2:[554,554]},
+ dau:{sh1:[0.4,0.4],tb2:[0.8,0.8]},
+ dv:{sh1:10.2,tb2:7.2}
+};
+/* Đối chiếu: TH tháng 10 và KHCS tháng 11 (CV 2239/CNPĐ-KTKH) */
+const T10={sl:{cn:1574.6,sh1:805.4,tb2:769.2},dt:{cn:3128.2,sh1:1676.3,tb2:1451.9},ln:{sh1:32.9,tb2:-7.3},shn:{sh1:9607.5,tb2:10410.1},gb:{sh1:2081.3,tb2:1887.5}};
+const KH11={sl:{sh1:575.7,tb2:431.3},dt:{sh1:1280.1,tb2:958.7},ln:{sh1:-70.8,tb2:-28.6}};
+
+const TASKS=[
+ {id:'3.1.1',g:'c',t:'Cập nhật, hoàn thiện KH SXKD 2027 để các Ban Tập đoàn trình HĐTV phê duyệt',sp:'KH SXKD năm 2027 của PVPGB',c:[],ph:'',h:'na',kl:''},
+ {id:'3.1.2',g:'c',t:'Hoàn thành PVCV, trình duyệt đơn hàng các gói thầu VT BDSCĐK 2027 còn lại',sp:'PVCV các gói VT BDSCĐK 2027 còn lại được phê duyệt',c:['KTATMT','TM'],ph:'',h:'tx',kl:'2114'},
+ {id:'3.1.3',g:'c',t:'Rà soát định kỳ việc thực hiện công việc hằng tuần theo KPI các phòng CQCN',sp:'Tình hình thực hiện công việc hằng tuần',c:['TCHC'],ph:'',h:'tx',kl:'2114'},
+ {id:'3.1.4',g:'c',t:'Hoàn thành dự thảo sửa đổi biểu mẫu hợp đồng trong QĐMS 200 để xin ý kiến',sp:'Dự thảo sửa đổi biểu mẫu HĐ trong QĐMS 200',c:['Tổ rà soát'],ph:'TM, Tổ CĐS, KTATMT, TCKT',h:'na',kl:'2114'},
+ {id:'3.1.5',g:'c',t:'Tổ chức khóa học phổ biến kiến thức về nhà máy điện khí',sp:'Khóa học phổ biến kiến thức nhà máy điện khí',c:['TCHC'],ph:'',h:'t11',kl:'2114'},
+ {id:'3.1.6',g:'c',t:'Giải trình các Ban Tập đoàn để sớm duyệt hồ sơ, tổng dự toán BDSCĐK 2027 SH1',sp:'Giải trình hồ sơ, tổng dự toán BDSCĐK 2027 SH1',c:['KTATMT'],ph:'TCKT',h:'t11',kl:'2114',rel:['sh1']},
+ {id:'3.1.7',g:'c',t:'Phát hành HSMST mua than theo HĐ khung; đánh giá HSDT than 2027–2028 cho SH1',sp:'HSMST phát hành; báo cáo đánh giá HSDT than SH1',c:['TM'],ph:'',h:'t11',kl:'2114',rel:['sh1']},
+ {id:'3.1.8',g:'c',t:'Hoàn thành ký Hợp đồng than năm 2027 với TKV cho NMĐ TB2',sp:'Hợp đồng than năm 2027 với TKV',c:['TM'],ph:'',h:'t11',kl:'2114',rel:['tb2']},
+ {id:'3.1.9',g:'c',t:'Rà soát, hoàn thiện lập KHTTMS năm 2027 của 02 NMĐ',sp:'Dự thảo KHTTMS năm 2027 của 02 NMĐ',c:['KTKH'],ph:'TM, KTATMT',h:'t11',kl:'2114'},
+ {id:'3.1.10',g:'c',t:'Báo cáo hằng tháng hạng mục phát sinh, đột xuất chưa xác định khi duyệt KHTTMS',sp:'Báo cáo hằng tháng về các hạng mục phát sinh',c:['KTKH'],ph:'02 NMĐ',h:'tx',kl:'2114'},
+ {id:'3.1.11',g:'c',t:'Đề xuất phương án triển khai Hợp đồng đá vôi, dầu, bảo hiểm chung cho 02 NMĐ',sp:'Phương án HĐ đá vôi, dầu, bảo hiểm chung',c:['TM'],ph:'KTKH, KTATMT, 02 NMĐ',h:'t11',kl:'2114'},
+ {id:'3.1.12',g:'c',t:'Phê duyệt đơn hàng, KHMS gói tư vấn thẩm tra định mức BDSC NMĐ TB2 và SH1',sp:'QĐ phê duyệt ĐH và KHMS gói tư vấn thẩm tra',c:['KTATMT'],ph:'',h:'na',kl:'2114',rel:['sh1','tb2']},
+ {id:'3.1.13',g:'c',t:'Ký kết Hợp đồng thực hiện quy trình thống kê, tính toán hao hụt than',sp:'HĐ thống kê, tính toán hao hụt than',c:['TM'],ph:'',h:'na',kl:'2114'},
+ {id:'3.1.14',g:'c',t:'Hoàn thiện quy trình xử lý vật tư thu hồi của Chi nhánh',sp:'Quy trình xử lý vật tư thu hồi',c:['KTKH'],ph:'TCKT',h:'na',kl:'2075'},
+ {id:'3.1.15',g:'c',t:'Rà soát hệ thống văn bản quy phạm nội bộ của toàn Chi nhánh',sp:'Danh mục hệ thống văn bản QPNB',c:['TCHC'],ph:'',h:'na',kl:'2075'},
+ {id:'3.1.16',g:'c',t:'Hoàn thiện, ban hành quy chế quản lý, vận hành khu nhà ở CBCNV 02 NMĐ',sp:'Quy chế quản lý, vận hành khu nhà ở CBCNV',c:['TCHC'],ph:'',h:'na',kl:'2075'},
+ {id:'3.1.17',g:'c',t:'Sát hạch, đánh giá, xếp loại đội ngũ kỹ thuật, vận hành viên, nhân sự BDSC',sp:'Kết quả sát hạch, đánh giá nhân sự của NM',c:['02 NMĐ'],ph:'',h:'t11',kl:'2007'},
+ {id:'3.1.18',g:'c',t:'Hoàn thiện hướng dẫn quản lý token, chữ ký số của Chi nhánh',sp:'Hướng dẫn quản lý token, chữ ký số',c:['Tổ CĐS'],ph:'',h:'na',kl:'1737'},
+ {id:'3.1.19',g:'c',t:'Lựa chọn đơn vị tư vấn đánh giá, cấp chứng nhận ISO 9001, 14001 và 45001',sp:'Đơn vị tư vấn cấp chứng nhận ISO',c:['KTATMT'],ph:'',h:'na',kl:'1660'},
+ {id:'3.1.20',g:'c',t:'Trình Tập đoàn hồ sơ và dự toán BDSCĐK năm 2027 của NMĐ TB2',sp:'Tờ trình hồ sơ, dự toán BDSCĐK 2027 TB2',c:[],ph:'',h:'na',kl:'',rel:['tb2']},
+ {id:'3.1.21',g:'c',t:'Hoàn thành rà soát chi phí năm 2026 của 02 Nhà máy',sp:'Báo cáo rà soát chi phí năm 2026',c:[],ph:'',h:'na',kl:'2114'},
+ {id:'3.1.22',g:'c',t:'Bổ sung KHTTMS năm 2026 của NMĐ TB2',sp:'QĐ phê duyệt bổ sung KHTTMS 2026 TB2',c:[],ph:'',h:'na',kl:'',rel:['tb2']},
+ {id:'3.1.23',g:'c',t:'Làm việc với Đoàn giám sát theo chuyên đề của HĐTV Tập đoàn',sp:'Dự thảo biên bản làm việc với Đoàn giám sát',c:[],ph:'',h:'na',kl:''},
+ {id:'3.1.24',g:'c',t:'Thống nhất với Tập đoàn phương án đàm phán, hình thức HĐ LTMA Ô Môn IV',sp:'Phương án đàm phán HĐ LTMA Ô Môn IV',c:[],ph:'',h:'na',kl:'2114'},
+ {id:'3.2.1',g:'tb2',t:'Thực hiện thủ tục LCNT gói cung cấp vật tư, lắp đặt, hiệu chuẩn thiết bị phân tích khí thải (hệ thống NOx, NH3) cho cả 02 tổ máy',sp:'Phát hành HSMT gói thiết bị phân tích khí thải NMĐ TB2',c:['NMĐ TB2'],ph:'',h:'na',kl:'2114'},
+ {id:'3.2.2',g:'tb2',t:'Làm việc với cơ quan Nhà nước, hoàn thiện thủ tục thuê đất, cấp GCN quyền sử dụng đất các hạng mục công trình NMĐ TB2',sp:'Kết quả theo 05 mốc tiến độ bên dưới',c:['KTKH, TCKT, TCHC'],ph:'NMĐ TB2',h:'moc',kl:'2114'},
+ {id:'3.2.3',g:'tb2',t:'Hoàn thành đánh giá HSDT gói thầu Catalyst tổ máy S1, S2',sp:'Báo cáo đánh giá HSDT gói thầu Catalyst',c:['TM'],ph:'KTATMT, KTKH',h:'t11',kl:'2114'},
+ {id:'3.2.4',g:'tb2',t:'Làm việc với tư vấn thẩm tra, thống nhất giải pháp xử lý dứt điểm bồi lắng tại cửa nhận nước làm mát',sp:'Giải pháp xử lý dứt điểm vấn đề bồi lắng',c:['KTATMT'],ph:'NMĐ TB2',h:'t11',kl:'2114'},
+ {id:'3.2.5',g:'tb2',t:'Tiếp tục đàm phán với EVN/EPTC về gia hạn, sửa đổi PPA của NMĐ TB2',sp:'Biên bản làm việc, văn bản gia hạn, sửa đổi PPA',c:['TM'],ph:'',h:'na',kl:'1796'},
+ {id:'3.3.1',g:'sh1',t:'Triển khai hội thảo mua than cho NMĐ SH1',sp:'Phương án mua than dài hạn và hàng năm, đảm bảo cung ứng đủ than cho NMĐ SH1',c:['NMĐ SH1'],ph:'TM',h:'t11',kl:'2114'},
+ {id:'3.3.2',g:'sh1',t:'Báo cáo Tập đoàn các vấn đề về Hợp đồng thu gom, xử lý tro xỉ, thạch cao; khảo sát thị trường, nhu cầu tiêu thụ, giá bán và khả năng thu gom xử lý',sp:'Báo cáo Tập đoàn về Hợp đồng thu gom, xử lý tro xỉ, thạch cao',c:['TM'],ph:'',h:'na',kl:'2075'},
+ {id:'3.3.3',g:'sh1',t:'Hoàn thành thử nghiệm, đánh giá SHN của NMĐ SH1',sp:'Báo cáo đánh giá SHN của NMĐ SH1',c:[],ph:'',h:'na',kl:''}
+];
+const KLO=['2114','2075','2007','1737','1660','1796'];
+const KL={'2114':'TBKL 2114 · BGĐ 21/10','2075':'TBKL 2075 · CN 12/10','2007':'TBKL 2007 · CN 05/10','1737':'TBKL 1737 · CN 07/9','1660':'TBKL 1660 · BGĐ 24/8','1796':'TBKL 1796 · BGĐ 14/9'};
+const HN={t11:'Hạn T11/2026',tx:'Thường xuyên',na:'Chưa ghi hạn',moc:'Theo mốc'};
+const MS=[
+ {n:1,t:'Gia hạn thời gian sử dụng khu đất 8,6 ha',a:'Hoàn thành trong Quý IV/2026',p:'q4'},
+ {n:2,t:'Bàn giao tuyến đường giao thông Km 4+026 – Km 7+244 cho địa phương',a:'Có văn bản trình cấp thẩm quyền quyết định trong tháng 11/2026',p:'t11'},
+ {n:3,t:'Bàn giao tuyến đường dây điện 35 kV',a:'Báo cáo Tổng công ty Điện lực miền Bắc và EVN xin chủ trương tiếp nhận',p:'na'},
+ {n:4,t:'Thuê đất trạm bơm, tuyến ống nước ngọt từ sông Diêm Hộ về Nhà máy',a:'Nộp lại hồ sơ xin thuê đất trên dịch vụ công quốc gia trong Quý IV/2026',p:'q4'},
+ {n:5,t:'Đường dây 10 kV (nay là 22 kV) cấp điện trạm bơm nước ngọt sau dịch chuyển',a:'Xác định đơn vị thuộc UBND tỉnh Hưng Yên chủ trì bàn giao tuyến 22 kV cho NMNĐ TB2 trong tháng 11/2026',p:'t11'}
+];
+const cnt=f=>TASKS.filter(f).length;
+
+/* ===== THÀNH PHẦN ===== */
+function ring(r){
+ if(!r) return '';
+ const L=201.06;
+ if(r.split!=null){
+  const l1=r.split/100*L;
+  return `<svg class="ring" viewBox="0 0 80 80"><circle cx="40" cy="40" r="32" fill="none" stroke="#E7E9F1" stroke-width="8"/>
+  <circle class="dn" cx="40" cy="40" r="32" fill="none" stroke="${C.n}" stroke-width="8" stroke-dasharray="${l1} ${L-l1}" transform="rotate(-90 40 40)" style="--c:${L}"/>
+  <circle class="dn" cx="40" cy="40" r="32" fill="none" stroke="${C.g}" stroke-width="8" stroke-dasharray="${L-l1} ${l1}" stroke-dashoffset="${-l1}" transform="rotate(-90 40 40)" style="--c:${L};animation-delay:.25s"/>
+  <text x="40" y="35" text-anchor="middle" font-size="10.5" font-weight="600" fill="${C.mu}">SH1 : TB2</text>
+  <text x="40" y="52" text-anchor="middle" font-size="16" font-weight="700" fill="${C.n}">${Math.round(r.split)} : ${100-Math.round(r.split)}</text></svg>`;
+ }
+ const l1=Math.min(r.p,100)/100*L;
+ return `<svg class="ring" viewBox="0 0 80 80"><circle cx="40" cy="40" r="32" fill="none" stroke="#E7E9F1" stroke-width="8"/>
+ <circle class="arc" cx="40" cy="40" r="32" fill="none" stroke="${r.c||C.n}" stroke-width="8" stroke-dasharray="${L}" style="--c:${L};stroke-dashoffset:${L-l1}" transform="rotate(-90 40 40)"/>
+ <text x="40" y="46" text-anchor="middle" font-size="18" font-weight="700" fill="${r.tc||C.n}">${r.t}</text></svg>`;
+}
+function card(k){
+ const d=k.d??1;
+ return `<div class="kpi ${k.st}"><div class="k-top"><span>${k.l}</span><small>${k.u}</small></div>
+ <div class="k-val" data-v="${k.v}" data-d="${d}">${fmt(k.v,d)}</div>
+ <span class="badge">${k.b}</span>
+ <div class="k-bot"><div class="meta">${(k.m||[]).map(([a,b])=>`<span>${a}</span><b>${b}</b>`).join('')}</div>${ring(k.r)}</div></div>`;
+}
+function countUp(root){
+ if(RM||document.body.classList.contains('noanim')) return;
+ $$('.k-val',root).forEach(el=>{
+  const v=+el.dataset.v,d=+el.dataset.d,t0=performance.now(),dur=1100;
+  const step=t=>{const k=Math.min(1,(t-t0)/dur),e=1-Math.pow(1-k,3);el.textContent=fmt(v*e,d);if(k<1)requestAnimationFrame(step)};
+  el.textContent=fmt(0,d);requestAnimationFrame(step);
+ });
+}
+const svgO=(w,h)=>`<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">`;
+function gbar(el,o){
+ const w=el.clientWidth,h=el.clientHeight,m={t:30,r:8,b:40,l:8};
+ const all=o.groups.flatMap(g=>g.v);let mx=Math.max(0,...all),mn=Math.min(0,...all);const sp=(mx-mn)||1;mx+=sp*.14;if(mn<0)mn-=sp*.17;
+ const ih=h-m.t-m.b,iw=w-m.l-m.r,Y=v=>m.t+(mx-v)/(mx-mn)*ih;
+ const n=o.series.length,gw=iw/o.groups.length,inner=gw*(o.inner||.84),slot=inner/n,bw=Math.min(slot*.8,o.maxBw||64);
+ let s=svgO(w,h)+`<line class="axis" x1="${m.l}" x2="${w-m.r}" y1="${Y(0)}" y2="${Y(0)}"/>`;
+ o.groups.forEach((g,gi)=>{
+  const gx=m.l+gi*gw+(gw-inner)/2;s+=`<g data-u="${g.u||'all'}">`;
+  g.v.forEach((v,si)=>{
+   const cx=gx+slot*si+slot/2,y0=Y(0),yv=Y(v),top=Math.min(y0,yv),hh=Math.max(1.5,Math.abs(yv-y0)),se=o.series[si];
+   s+=`<rect class="bar${v<0?' neg':''}" x="${cx-bw/2}" y="${top}" width="${bw}" height="${hh}" rx="3" fill="${se.c}" style="animation-delay:${gi*140+si*70}ms"/>`;
+   s+=`<text class="vl fade" x="${cx}" y="${v<0?top+hh+18:top-8}" text-anchor="middle" style="font-size:${o.fs||15}px;animation-delay:${450+gi*140+si*70}ms${se.hl?';font-weight:700;fill:'+C.gd:''}">${fmt(v,se.d??1)}</text>`;
+  });
+  s+=`<text class="gl" x="${m.l+gi*gw+gw/2}" y="${h-12}" text-anchor="middle">${g.l}</text></g>`;
+ });
+ el.innerHTML=s+'</svg>';
+}
+const SER=[{n:'TH T10',c:C.gr,d:1},{n:'KHCS T11',c:C.n,d:1},{n:'KPI T11',c:C.g,hl:1,d:2}];
+const lgH=a=>a.map(x=>`<span><i style="background:${x.c}"></i>${x.n}</span>`).join('');
+
+/* ===== SLIDE 1 ===== */
+function s1cards(f){
+ const sh=k=>K[k].sh1/K[k].cn*100;
+ if(f==='cn') return [
+  {l:'Sản lượng điện',u:'tr.kWh',v:K.sl.cn,d:2,st:'tgt',b:`${arrow(K.sl.cn,T10.sl.cn)} ${pct(K.sl.cn,T10.sl.cn)} so TH T10`,m:[['SH1',fmt(K.sl.sh1,2)],['TB2',fmt(K.sl.tb2,2)],['TH T10',fmt(T10.sl.cn)]],r:{split:sh('sl')}},
+  {l:'Doanh thu',u:'tỷ đồng',v:K.dt.cn,d:2,st:'tgt',b:`${arrow(K.dt.cn,T10.dt.cn)} ${pct(K.dt.cn,T10.dt.cn)} so TH T10`,m:[['SH1',fmt(K.dt.sh1,2)],['TB2',fmt(K.dt.tb2,2)],['TH T10',fmt(T10.dt.cn)]],r:{split:sh('dt')}},
+  {l:'LNST',u:'tỷ đồng',v:K.ln.cn,d:2,st:K.ln.cn<0?'neg':'pos',b:'Tổng 02 NMĐ',m:[['SH1',fmt(K.ln.sh1,2)],['TB2',fmt(K.ln.tb2,2)]]},
+  {l:'SHN Sông Hậu 1',u:'kJ/kWh',v:K.shn.sh1,d:2,st:'tgt',b:'Bằng PPA',m:[['TH T10',fmt(T10.shn.sh1)],['Cần giảm',fmt(T10.shn.sh1-K.shn.sh1)]]},
+  {l:'SHN Thái Bình 2',u:'kJ/kWh',v:K.shn.tb2,d:0,st:'tgt',b:'TH T10 thấp hơn KPI',m:[['TH T10',fmt(T10.shn.tb2)],['Dư địa',fmt(K.shn.tb2-T10.shn.tb2)]]},
+  taskCard('all')];
+ const p=f,o=p==='sh1'?'tb2':'sh1',shr=k=>fmt(K[k][p]/K[k].cn*100)+'%';
+ return [
+  {l:'Sản lượng điện',u:'tr.kWh',v:K.sl[p],d:2,st:'tgt',b:`${arrow(K.sl[p],T10.sl[p])} ${pct(K.sl[p],T10.sl[p])} so TH T10`,m:[['KHCS T11',fmt(KH11.sl[p])],['TH T10',fmt(T10.sl[p])],['Tỷ trọng CN',shr('sl')]]},
+  {l:'Doanh thu',u:'tỷ đồng',v:K.dt[p],d:2,st:'tgt',b:`${arrow(K.dt[p],T10.dt[p])} ${pct(K.dt[p],T10.dt[p])} so TH T10`,m:[['KHCS T11',fmt(KH11.dt[p])],['TH T10',fmt(T10.dt[p])],['Tỷ trọng CN',shr('dt')]]},
+  {l:'LNST',u:'tỷ đồng',v:K.ln[p],d:2,st:K.ln[p]<0?'neg':'pos',b:p==='tb2'?'Theo FC 703,99 đ/kWh':'Bằng KHCS T11',m:[['KHCS T11',fmt(KH11.ln[p])],['TH T10',fmt(T10.ln[p])]]},
+  p==='sh1'?{l:'Suất hao nhiệt',u:'kJ/kWh',v:K.shn.sh1,d:2,st:'tgt',b:'Bằng PPA',m:[['TH T10',fmt(T10.shn.sh1)],['Cần giảm',fmt(T10.shn.sh1-K.shn.sh1)]]}
+           :{l:'Suất hao nhiệt',u:'kJ/kWh',v:K.shn.tb2,d:0,st:'tgt',b:'TH T10 thấp hơn KPI',m:[['TH T10',fmt(T10.shn.tb2)],['Dư địa',fmt(K.shn.tb2-T10.shn.tb2)]]},
+  {l:'Điện tự dùng',u:'%',v:K.td[p],d:2,st:'tgt',b:'Tại 100% tải RO',m:[['CS tinh S1, S2',fmt(K.cs[p][0],0)+' MW'],['Dầu đốt kèm',fmt(K.dau[p][0])+' g/kWh'],['Đá vôi',fmt(K.dv[p])+' g/kWh']]},
+  taskCard(p)];
+}
+function taskCard(p){
+ const g=p==='all'?null:p, sel=x=>g?x.g===g:true, n=cnt(sel), t11=cnt(x=>sel(x)&&x.h==='t11');
+ const rel=g?cnt(x=>x.rel&&x.rel.includes(g)):0;
+ const m=g?[...(cnt(x=>sel(x)&&x.h==='moc')?[['Theo mốc',cnt(x=>sel(x)&&x.h==='moc')]]:[]),['Chưa ghi hạn',cnt(x=>sel(x)&&x.h==='na')],['Chung liên quan',rel]]
+          :[['Chung','' +cnt(x=>x.g==='c')],['SH1',''+cnt(x=>x.g==='sh1')],['TB2',''+cnt(x=>x.g==='tb2')]];
+ return {l:g?'Nhiệm vụ riêng':'Nhiệm vụ trọng tâm',u:'nhiệm vụ',v:n,d:0,st:'tgt',b:`${t11} nhiệm vụ hạn T11`,m,r:{p:t11/n*100,t:`${t11}/${n}`,c:C.a,tc:C.ad}};
+}
+function opsHTML(){
+ const cell=(l,v,u,ch,cl)=>`<div><label>${l}</label><strong>${v}<small>${u}</small></strong><span class="chip ${cl}">${ch}</span></div>`;
+ return ['sh1','tb2'].map(p=>{
+  const sl=K.sl[p],cs=K.cs[p][0]+K.cs[p][1],pb=sl*1000/720,gb=K.dt[p]/sl*1000,lk=K.ln[p]/sl*1000;
+  return `<div class="op" data-u="${p}"><div class="nm"><b>${p==='sh1'?'NMĐ Sông Hậu 1':'NMĐ Thái Bình 2'}</b><span>Quy đổi KPI tháng 11</span></div>
+  ${cell('Bình quân ngày',fmt(sl/30,2),'tr.kWh','30 ngày','')}
+  ${cell('Công suất phát bq',fmt(pb),'MW',fmt(pb/cs*100)+'% CS tinh','')}
+  ${cell('Giá bán bq',fmt(gb),'đ/kWh','TH T10 '+fmt(T10.gb[p]),'')}
+  ${cell('LNST bq',sg(lk),'đ/kWh',lk<0?'Lỗ':'Lãi',lk<0?'warn':'good')}</div>`;
+ }).join('');
+}
+function s1(play){
+ const f=$('#s1').dataset.focus;$('#s1k').innerHTML=s1cards(f).map(card).join('');
+ ['#lg1','#lg2','#lg3'].forEach(id=>$(id).innerHTML=lgH(SER));
+ gbar($('#s1a'),{groups:[{u:'sh1',l:'NMĐ Sông Hậu 1',v:[T10.sl.sh1,KH11.sl.sh1,K.sl.sh1]},{u:'tb2',l:'NMĐ Thái Bình 2',v:[T10.sl.tb2,KH11.sl.tb2,K.sl.tb2]}],series:SER});
+ gbar($('#s1b'),{groups:[{u:'sh1',l:'NMĐ Sông Hậu 1',v:[T10.dt.sh1,KH11.dt.sh1,K.dt.sh1]},{u:'tb2',l:'NMĐ Thái Bình 2',v:[T10.dt.tb2,KH11.dt.tb2,K.dt.tb2]}],series:SER});
+ gbar($('#s1c'),{groups:[{u:'sh1',l:'NMĐ Sông Hậu 1',v:[T10.ln.sh1,KH11.ln.sh1,K.ln.sh1]},{u:'tb2',l:'NMĐ Thái Bình 2',v:[T10.ln.tb2,KH11.ln.tb2,K.ln.tb2]}],series:SER});
+ $('#s1d').innerHTML=opsHTML();
+ if(play)countUp($('#s1'));
+}
+
+/* ===== SLIDE 2 ===== */
+function shnPlot(el){
+ const w=el.clientWidth,h=el.clientHeight,m={t:14,r:24,b:34,l:200},lo=9400,hi=10600;
+ const X=v=>m.l+(v-lo)/(hi-lo)*(w-m.l-m.r),rh=(h-m.t-m.b)/2;
+ const R=[{u:'sh1',n:'NMĐ Sông Hậu 1',k:K.shn.sh1,th:T10.shn.sh1,c:C.n,kl:'KPI = PPA '+fmt(K.shn.sh1,2)},{u:'tb2',n:'NMĐ Thái Bình 2',k:K.shn.tb2,th:T10.shn.tb2,c:C.g,kl:'KPI '+fmt(K.shn.tb2,0)}];
+ let s=svgO(w,h);
+ for(let v=lo;v<=hi;v+=200){s+=`<line x1="${X(v)}" x2="${X(v)}" y1="${m.t}" y2="${h-m.b+4}" stroke="${C.so}" stroke-width="1.2"/><text class="gs" x="${X(v)}" y="${h-10}" text-anchor="middle">${fmt(v,0)}</text>`}
+ R.forEach((r,i)=>{
+  const y=m.t+rh*i+rh/2,a=Math.min(r.k,r.th),b=Math.max(r.k,r.th),gc=r.th>r.k?C.a:C.gm;
+  s+=`<g data-u="${r.u}"><text class="gl" x="0" y="${y-3}">${r.n}</text><text class="gs" x="0" y="${y+19}">tại cân than máy cấp</text>
+  <line x1="${X(lo)}" x2="${X(hi)}" y1="${y}" y2="${y}" stroke="#E7E9F1" stroke-width="12" stroke-linecap="round"/>
+  <rect class="svhb" x="${X(a)}" y="${y-6}" width="${X(b)-X(a)}" height="12" fill="${gc}"/>
+  <rect x="${X(r.k)-2.5}" y="${y-20}" width="5" height="40" rx="2" fill="${r.c}"/>
+  <text x="${X(r.k)}" y="${y+40}" text-anchor="middle" style="font-size:16px;font-weight:700;fill:${r.c}">${r.kl}</text>
+  <circle class="fade" cx="${X(r.th)}" cy="${y}" r="9" fill="#fff" stroke="${C.nd}" stroke-width="3" style="animation-delay:.5s"/>
+  <text class="vl fade" x="${X(r.th)}" y="${y-24}" text-anchor="middle" style="animation-delay:.6s">TH T10 ${fmt(r.th)}</text></g>`;
+ });
+ el.innerHTML=s+'</svg>';
+}
+function shnStats(){
+ return [['sh1',K.shn.sh1,T10.shn.sh1],['tb2',K.shn.tb2,T10.shn.tb2]].map(([p,k,t])=>{
+  const d=k-t,ok=d>=0;
+  return `<div class="sst" data-u="${p}"><strong style="color:${ok?C.gd:C.ad}">${sg(d)}<small>kJ/kWh</small></strong>
+  <div><span>KPI − TH tháng 10 (${pct(k,t,2)})</span><span class="chip ${ok?'good':'warn'}">${ok?'TH T10 đã thấp hơn KPI':'Cần giảm '+fmt(-d)+' kJ/kWh'}</span></div></div>`;
+ }).join('');
+}
+function dmHTML(){
+ const rows=[
+  {l:'Tỷ lệ điện tự dùng',s:'% · tại 100% tải RO · 02 tổ máy',v:{sh1:[K.td.sh1],tb2:[K.td.tb2]},d:2,lb:['']},
+  {l:'Công suất tinh',s:'MW · từng tổ máy',v:K.cs,d:0,lb:['S1','S2']},
+  {l:'Dầu đốt kèm',s:'g/kWh · từng tổ máy',v:K.dau,d:1,lb:['S1','S2']},
+  {l:'Suất tiêu hao đá vôi',s:'g/kWh · cả nhà máy',v:{sh1:[K.dv.sh1],tb2:[K.dv.tb2]},d:1,lb:['']}];
+ const hd=`<div class="dmr hd2"><div></div><div data-u="sh1"><b style="color:${C.n};border-color:${C.n}">NMĐ Sông Hậu 1</b></div><div data-u="tb2"><b style="color:${C.gd};border-color:${C.g}">NMĐ Thái Bình 2</b></div></div>`;
+ return hd+rows.map((r,ri)=>{
+  const mx=Math.max(...r.v.sh1,...r.v.tb2)*1.12;
+  const cellH=(p,c)=>`<div class="dmc" data-u="${p}">${r.v[p].map((v,i)=>`<div class="dmb"><label>${r.lb[i]}</label><div class="trk"><i class="hb" style="width:calc((100% - 80px) * ${v/mx});background:${c};animation-delay:${ri*120+i*60}ms"></i><em>${fmt(v,r.d)}</em></div></div>`).join('')}</div>`;
+  return `<div class="dmr"><div class="ml"><b>${r.l}</b><span>${r.s}</span></div>${cellH('sh1',C.n)}${cellH('tb2',C.g)}</div>`;
+ }).join('');
+}
+function s2(){
+ shnPlot($('#s2a'));$('#s2s').innerHTML=shnStats();$('#s2b').innerHTML=dmHTML();
+}
+
+/* ===== SLIDE 3 ===== */
+const F3={h:'all',c:null};
+const ORG=['TM','KTATMT','TCHC','KTKH','Tổ rà soát','Tổ CĐS','02 NMĐ'];
+function s3(){
+ const T=TASKS.filter(x=>x.g==='c'),n=T.length,ch=k=>T.filter(x=>x.h===k).length;
+ const H=[['all','Tất cả',n],['t11','Hạn T11/2026',ch('t11')],['tx','Thường xuyên',ch('tx')],['na','Chưa ghi hạn',ch('na')]];
+ $('#s3tabs').innerHTML=H.map(([k,l,c])=>`<button data-h="${k}" class="${F3.h===k?'on':''}">${l}<small>${c}</small></button>`).join('');
+ const seg=[['t11','Hạn T11/2026',C.a,'#fff'],['tx','Thường xuyên',C.g,'#fff'],['na','Chưa ghi hạn',C.gr,C.nd]];
+ const org=[...ORG.map(o=>[o,T.filter(x=>x.c.includes(o)).length]),['—',T.filter(x=>!x.c.length).length]];
+ const kl=KLO.map(k=>[k,T.filter(x=>x.kl===k).length]).filter(x=>x[1]);
+ $('#s3s').innerHTML=`<div class="sb"><h4>Nhiệm vụ chung</h4><div class="big"><strong>${n}</strong><span>nhiệm vụ</span></div></div>
+ <div class="sb"><h4>Theo thời hạn</h4><div class="hbar">${seg.map(([k,l,c,tc])=>`<div class="hb" style="flex:${ch(k)};background:${c};color:${tc}">${ch(k)}</div>`).join('')}</div>
+  <div class="hlg">${seg.map(([k,l,c])=>`<span><i style="background:${c}"></i>${l} <b>${ch(k)}</b></span>`).join('')}</div></div>
+ <div class="sb"><h4>Theo đơn vị chủ trì · căn cứ: ${kl.map(([k,c])=>`TBKL ${k} (${c})`).join(', ')}, không ghi (${T.filter(x=>!x.kl).length})</h4><div class="cchips">${org.map(([o,c])=>`<button data-c="${o}" class="${F3.c===o?'on':''}">${o==='—'?'Chưa ghi đơn vị':o}<b>${c}</b></button>`).join('')}</div></div>`;
+ $('#s3t').innerHTML=`<colgroup><col style="width:64px"><col><col style="width:390px"><col style="width:128px"><col style="width:210px"><col style="width:142px"><col style="width:190px"></colgroup>
+ <thead><tr><th>STT</th><th>Nhiệm vụ</th><th>Mục tiêu / Kết quả</th><th>Chủ trì</th><th>Phối hợp</th><th>Thời hạn</th><th>Căn cứ</th></tr></thead>
+ <tbody>${T.map(x=>`<tr data-h="${x.h}" data-c="${x.c.length?x.c.join('|'):'—'}"><td class="id">${x.id}</td><td>${x.t}</td><td class="sp">${x.sp}</td><td class="ctd">${x.c.length?x.c.join(' · '):'—'}</td><td class="ph">${x.ph||'—'}</td><td><span class="chip ${x.h}">${HN[x.h]}</span></td><td class="kl">${x.kl?KL[x.kl]:'—'}</td></tr>`).join('')}</tbody>`;
+ $$('#s3tabs button').forEach(b=>b.onclick=()=>{F3.h=b.dataset.h;$$('#s3tabs button').forEach(x=>x.classList.toggle('on',x===b));s3f()});
+ $$('#s3s .cchips button').forEach(b=>b.onclick=()=>{F3.c=F3.c===b.dataset.c?null:b.dataset.c;$$('#s3s .cchips button').forEach(x=>x.classList.toggle('on',x.dataset.c===F3.c));s3f()});
+ s3f();
+}
+function s3f(){
+ $$('#s3t tbody tr').forEach(r=>{const ok=(F3.h==='all'||r.dataset.h===F3.h)&&(F3.c===null||r.dataset.c.split('|').includes(F3.c));r.classList.toggle('dim',!ok)});
+}
+
+/* ===== SLIDE 4 ===== */
+function ptHTML(x,c){
+ return `<div class="pt"><div class="no" style="background:${c}">${x.id}</div><div><h4>${x.t}</h4><p>Mục tiêu: ${x.sp}</p></div>
+ <div class="rt">${x.c.length?`<span class="chip ct">${x.c.join(' · ')}</span>`:`<span class="chip na">Chưa ghi đơn vị</span>`}<span class="chip ${x.h}">${HN[x.h]}</span>
+ <span class="nt">${[x.ph?'Phối hợp: '+x.ph:'',x.kl?'TBKL '+x.kl:''].filter(Boolean).join(' · ')||'&nbsp;'}</span></div></div>`;
+}
+function plantPanel(p){
+ const nm=p==='sh1'?'NMĐ Sông Hậu 1':'NMĐ Thái Bình 2',sec=p==='sh1'?'3.3':'3.2',c=p==='sh1'?C.n:C.g;
+ const T=TASKS.filter(x=>x.g===p),RL=TASKS.filter(x=>x.rel&&x.rel.includes(p));
+ return `<div class="pn" data-u="${p}"><div class="pn-h"><h3 style="color:${p==='sh1'?C.n:C.gd}">${nm}<small>mục ${sec} · ${T.length} nhiệm vụ</small></h3><div class="lg"><span>Hạn T11/2026: <b style="color:${C.ad}">${T.filter(x=>x.h==='t11').length}</b></span></div></div>
+ ${T.map(x=>ptHTML(x,c)).join('')}
+ <div class="rel"><h5>Nhiệm vụ chung liên quan trực tiếp</h5><ul>${RL.map(x=>`<li><b>${x.id}</b><span>${x.sp}</span><span class="chip ${x.h}">${HN[x.h]}</span></li>`).join('')}</ul></div></div>`;
+}
+function s4(){
+ $('#s4a').innerHTML=plantPanel('sh1')+plantPanel('tb2');
+ const col=[['t11','Tháng 11/2026',C.a,C.ad],['q4','Quý IV/2026',C.g,C.gd],['na','Chưa ghi mốc thời gian',C.nm,C.n]];
+ $('#s4b').innerHTML=col.map(([k,l,c,tc])=>{const M=MS.filter(x=>x.p===k);
+  return `<div class="tlc"><h5 style="color:${tc};border-color:${c}">${l}<small>${M.length} việc</small></h5>${M.map(x=>`<div class="ms"><i style="background:${c}">${x.n}</i><div><b>${x.t}</b><span>${x.a}</span></div></div>`).join('')}</div>`}).join('');
+}
+
+/* ===== ĐIỀU HƯỚNG ===== */
+const slides=$$('.slide'),R=[s1,s2,s3,s4];let cur=-1;
+$$('.logo').forEach(el=>el.innerHTML=LOGO_SRC?`<img src="${LOGO_SRC}" alt="PVPGB">`:`<div class="lt"><b>PVPGB</b><span>Chi nhánh Phát điện Dầu khí</span></div>`);
+$('#dots').innerHTML=slides.map((_,i)=>`<i data-i="${i}" title="Slide ${i+1}"></i>`).join('');
+function go(i){
+ i=Math.max(0,Math.min(slides.length-1,i));if(i===cur)return;cur=i;
+ slides.forEach((s,k)=>s.classList.toggle('on',k===i));$$('#dots i').forEach((d,k)=>d.classList.toggle('on',k===i));
+ R[i](true);
+}
+[['#s1',0],['#s2',1],['#s4',3]].forEach(([id,idx])=>$$(id+' .tabs button').forEach(b=>b.onclick=()=>{
+ $$(id+' .tabs button').forEach(x=>x.classList.toggle('on',x===b));$(id).dataset.focus=b.dataset.u;R[idx](true);
+}));
+$('#prev').onclick=()=>go(cur-1);$('#next').onclick=()=>go(cur+1);
+$('#dots').onclick=e=>{if(e.target.dataset.i)go(+e.target.dataset.i)};
+document.addEventListener('keydown',e=>{
+ if(['ArrowRight','PageDown'].includes(e.key)){go(cur+1);e.preventDefault()}
+ else if(['ArrowLeft','PageUp'].includes(e.key)){go(cur-1);e.preventDefault()}
+ else if(e.key==='f'||e.key==='F'){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen().catch(()=>{})}
+});
+function fit(){const s=Math.min(innerWidth/1920,innerHeight/1080);$('#stage').style.transform=`translate(-50%,-50%) scale(${s})`}
+addEventListener('resize',fit);fit();
+addEventListener('beforeprint',()=>{document.body.classList.add('noanim');R.forEach(f=>f(false))});
+addEventListener('afterprint',()=>document.body.classList.remove('noanim'));
+R.forEach(f=>f(false));go(0);
+</script>
+</body>
+</html>
